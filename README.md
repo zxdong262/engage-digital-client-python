@@ -13,8 +13,8 @@ rc = RestClient(
   RINGCENTRAL_ENGAGE_API_TOKEN,
   RINGCENTRAL_ENGAGE_SERVER_URL
 )
-let r = rc.get('/1.0/roles')
-expect(r.json.records.length > 0).toBe(true)
+r = rc.get('/1.0/roles')
+assertEqual(len(r.json['records']) > 0, True)
 ```
 
 ## Test

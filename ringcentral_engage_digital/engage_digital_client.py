@@ -21,9 +21,11 @@ class RestClient(object):
     def _bearerAuthorizationHeader(self):
       return f'Bearer {self.apiToken}'
 
-    def request(self, method, url, headers={}, **kargs):
+    def request(self, method, url, headers, **kargs):
         urlFinal = urlparse.urljoin(self.server, url)
         userAgentHeader = f'ringcentral-engage-client-python/v${version}'
+        if headers is None:
+          headers = {}
         headers = _.assign(headers, {
             'Authorization': self._bearerAuthorizationHeader(),
             'User-Agent': userAgentHeader,
@@ -43,28 +45,26 @@ class RestClient(object):
             r.raise_for_status()
         except:
             raise Exception(
-              '{}\n{}\n\n{}\nStatus: {}\n Response Text: {}'.format(
+              '{}\n{}\n\nStatus: {}\n Response Text: {}'.format(
                   req.method + ' ' + req.url,
                   'Headers:\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
-                  req.body,
                   r.status_code,
                   r.text
               )
-              'HTTP status code: {0}\n\n{1}'.format(r.status_code, r.text)
             )
         return r
 
     def get(self, url, headers=None, **kargs):
-        return self.request('GET', **kargs)
+        return self.request('GET', url, headers, **kargs)
 
-    def post(self, url, **kargs):
-        return self.request('POST', **kargs)
+    def post(self, url, headers=None, **kargs):
+        return self.request('POST', url, headers, **kargs)
 
-    def put(self, url, **kargs):
-        return self.request('PUT', **kargs)
+    def put(self, url, headers=None, **kargs):
+        return self.request('PUT', url, headers, **kargs)
 
-    def patch(self, url, **kargs):
-        return self.request('PATCH', **kargs)
+    def patch(self, url, headers=None, **kargs):
+        return self.request('PATCH', url, headers, **kargs)
 
-    def delete(self, url, **kargs):
-        return self.request('DELETE', **kargs)
+    def delete(self, url, headers=None, **kargs):
+        return self.request('DELETE', url, headers, **kargs)
